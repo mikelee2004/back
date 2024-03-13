@@ -18,19 +18,25 @@ import { PromoEntity } from './entities/promo.entity';
 import { DeleteResult } from 'typeorm';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { fileStorage } from './storage';
+import { ProductEntity } from 'src/product/entities/product.entity';
 
 @ApiTags('promo')
 @Controller('promo')
 export class PromoController {
   constructor(private readonly promoService: PromoService) {}
 
-  @Post()
-  create(@Body() createPromoDto: CreatePromoDto) {
-    return this.promoService.create(createPromoDto);
+  @Post() 
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image', { storage: fileStorage }))
+  create(
+    @Body() dto: CreatePromoDto,
+    @UploadedFile() image: Express.Multer.File,
+  ): Promise<PromoEntity> {
+    return this.promoService.create(dto, image);
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<ProductEntity[]> {
     return this.promoService.findAll();
   }
 
@@ -40,17 +46,24 @@ export class PromoController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<ProductEntity> {
     return this.promoService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePromoDto: UpdatePromoDto) {
-    return this.promoService.update(+id, updatePromoDto);
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image', { storage: fileStorage }))
+  update(
+    @Param('id') id: string, 
+    @Body() dto: UpdatePromoDto,
+    @UploadedFile() image: Express.Multer.File,
+  ): Promise<ProductEntity> {
+    return this.promoService.update(+id, dto, image);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.promoService.remove(+id);
+  remove(
+    @Param('id') id: string): Promise<DeleteResult> {
+    return this.promoService.delete(+id);
   }
 }
