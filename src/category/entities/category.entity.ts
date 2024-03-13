@@ -11,9 +11,9 @@ export class CategoryEntity {
     id: number;
 
     @Column()
-    name: string
+    name: string;
 
     @CreateDateColumn()
-    createdAt: Date
+    createdAt: Date;
 }
 

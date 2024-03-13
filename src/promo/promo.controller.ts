@@ -5,12 +5,21 @@ import {
   Body, 
   Patch, 
   Param, 
-  Delete 
+  Delete, 
+  UseInterceptors,
+  UploadedFile,
+  Response,
 } from '@nestjs/common';
 import { PromoService } from './promo.service';
 import { CreatePromoDto } from './dto/create-promo.dto';
 import { UpdatePromoDto } from './dto/update-promo.dto';
+import { ApiTags, ApiConsumes } from '@nestjs/swagger';
+import { PromoEntity } from './entities/promo.entity';
+import { DeleteResult } from 'typeorm';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { fileStorage } from './storage';
 
+@ApiTags('promo')
 @Controller('promo')
 export class PromoController {
   constructor(private readonly promoService: PromoService) {}
@@ -23,6 +32,11 @@ export class PromoController {
   @Get()
   findAll() {
     return this.promoService.findAll();
+  }
+
+  @Get('/image/:path')
+  download(@Param('path') path: string, @Response() response) {
+    return response.sendFile(path, { root: './db_images/promo' });
   }
 
   @Get(':id')
