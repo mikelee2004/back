@@ -2,18 +2,22 @@ import {
     Column, 
     CreateDateColumn, 
     Entity, 
-    PrimaryGeneratedColumn 
-} from "typeorm";
+    PrimaryGeneratedColumn, 
+    UpdateDateColumn
+} from 'typeorm';
 
 @Entity('category')
 export class CategoryEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ name: 'category_id'})
     id: number;
 
-    @Column()
+    @Column({ name: 'category_name'})
     name: string;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ name: 'category_cd'})
     createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
 }
 
