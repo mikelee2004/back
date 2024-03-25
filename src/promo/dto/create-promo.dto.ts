@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreatePromoDto {
   @ApiProperty({
@@ -13,9 +13,20 @@ export class CreatePromoDto {
   })
   image: Express.Multer.File;
 
+  @ApiProperty()
   @IsString()
   title: string = 'Promo Name';
 
+  @ApiProperty()
   @IsString()
   text: string = 'Promo Description';
+
+  @ApiProperty()
+  @IsNumber()
+  rating: number = 5;
+
+  @ApiProperty()
+  @IsNumber()
+  price: number = 3000;
+
 }

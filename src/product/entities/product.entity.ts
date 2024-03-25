@@ -1,4 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { 
+    Column, 
+    Entity, 
+    JoinColumn, 
+    ManyToOne, 
+    PrimaryGeneratedColumn 
+} from "typeorm";
+
+import { CategoryEntity } from "src/category/entities/category.entity";
+
 
 @Entity('product')
 export class ProductEntity {
@@ -9,8 +18,20 @@ export class ProductEntity {
     image: string;
 
     @Column()
-    title: string;
+    name: string;
 
     @Column()
-    text: string;
+    description: string;
+
+    @Column()
+    amount: number;
+
+    @Column()
+    price: number;
+
+    @ManyToOne(() => CategoryEntity, (category) => category.products, {
+        eager: true,
+    })
+    @JoinColumn()
+    category: CategoryEntity;
 }

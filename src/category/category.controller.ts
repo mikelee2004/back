@@ -5,12 +5,13 @@ import {
   Body, 
   Patch, 
   Param, 
-  Delete 
+  Delete,
+  UploadedFile, 
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('category')
 @Controller('category')
@@ -18,6 +19,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post()
+  @ApiConsumes('multipart/form-data')
   create(@Body() dto: CreateCategoryDto) {
     return this.categoryService.create(dto);
   }
@@ -36,12 +38,13 @@ export class CategoryController {
   update(
     @Param('id') id: string, 
     @Body() updateCategoryDto: UpdateCategoryDto,
+    @UploadedFile() image: Express.Multer.File,
   ) {
-    return this.categoryService.update(+id, updateCategoryDto);
+    return this.categoryService.update(+id, updateCategoryDto, image);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.categoryService.remove(+id);
+    return this.categoryService.delete(+id);
   }
 }

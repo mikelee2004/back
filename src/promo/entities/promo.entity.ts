@@ -13,4 +13,10 @@ export class PromoEntity {
 
     @Column()
     text: string;
+
+    @Column()
+    rating: number;
+
+    @Column()
+    price: number;
 }

@@ -19,8 +19,11 @@ export class ProductService {
   ): Promise<ProductEntity> {
     return this.repository.save({
       image: image.filename,
-      title: dto.title,
-      text: dto.text,
+      name: dto.name,
+      description: dto.description,
+      amount: dto.amount,
+      price: dto.price,
+      category: dto.category,
     });
   }
 
@@ -37,12 +40,27 @@ export class ProductService {
     if (!toUpdate) {
       throw new BadRequestException(`Записи с id=${id} не найдено`);
     }
-    if (dto.text) {
-      toUpdate.text = dto.text;
+    
+    if (dto.description) {
+      toUpdate.description = dto.description;
     }
-    if (dto.title) {
-      toUpdate.title = dto.title;
+    
+    if (dto.name) {
+      toUpdate.name = dto.name;
     }
+    
+    if (dto.description) {
+      toUpdate.description = dto.description;
+    }
+    
+    if (dto.amount) {
+      toUpdate.amount = dto.amount;
+    }
+    
+    if (dto.price) {
+      toUpdate.price = dto.price;
+    }
+
     if (image) {
       if (toUpdate.image !== image.filename) {
         fs.unlink(`db_images/promo/${toUpdate.image}`, (err) => {

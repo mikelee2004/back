@@ -36,7 +36,7 @@ export class PromoController {
   }
 
   @Get()
-  findAll(): Promise<ProductEntity[]> {
+  findAll(): Promise<PromoEntity[]> {
     return this.promoService.findAll();
   }
 
@@ -46,7 +46,7 @@ export class PromoController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<ProductEntity> {
+  findOne(@Param('id') id: string): Promise<PromoEntity> {
     return this.promoService.findOne(+id);
   }
 
@@ -57,7 +57,7 @@ export class PromoController {
     @Param('id') id: string, 
     @Body() dto: UpdatePromoDto,
     @UploadedFile() image: Express.Multer.File,
-  ): Promise<ProductEntity> {
+  ): Promise<PromoEntity> {
     return this.promoService.update(+id, dto, image);
   }
 

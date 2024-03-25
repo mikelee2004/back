@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, IsNumberString, IsString } from "class-validator";
+import { CategoryEntity } from "src/category/entities/category.entity";
 
 export class CreateProductDto {
     @ApiProperty({
@@ -16,9 +17,19 @@ export class CreateProductDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    title = 'Масло'
+    name = 'Название продукта'
 
     @ApiProperty()
     @IsString()
-    text = 'Моторное масло'
+    description = 'Описание'
+
+    @ApiProperty()
+    amount: number = 50;
+
+    @ApiProperty()
+    price: number = 3000;
+
+    @ApiProperty()
+    @IsString()
+    category: CategoryEntity;
 }

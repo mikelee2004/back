@@ -5,11 +5,17 @@ import { PromoModule } from './promo/promo.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getPostgresConfig } from './configs/postgres.config';
 import { ProductModule } from './product/product.module';
+import { CartModule } from './cart/cart.module';
+import { UserModule } from './user/user.module';
+import { CarbrandModule } from './carbrand/carbrand.module';
+
+
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
+      isGlobal: true
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -19,6 +25,9 @@ import { ProductModule } from './product/product.module';
     CategoryModule,
     PromoModule,
     ProductModule,
+    CartModule,
+    UserModule,
+    CarbrandModule,
   ],
 
 })
