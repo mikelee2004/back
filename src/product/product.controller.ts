@@ -7,20 +7,24 @@ import { Controller,
   Delete, 
   Response,
   UseInterceptors,
-  UploadedFile
+  UploadedFile,
+  UseGuards
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { fileStorage } from 'src/product/storage';
 import { ProductEntity } from './entities/product.entity';
 import { DeleteResult } from 'typeorm';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 
 @ApiTags('product')
 @Controller('product')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 

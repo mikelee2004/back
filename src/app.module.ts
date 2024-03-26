@@ -7,11 +7,9 @@ import { getPostgresConfig } from './configs/postgres.config';
 import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
 import { UserModule } from './user/user.module';
-import { CarbrandModule } from './carbrand/carbrand.module';
 import { AuthModule } from './auth/auth.module';
-
-
-
+import { OrderModule } from './order/order.module';
+import { CarbrandModule } from './carbrand/carbrand.module';
 
 @Module({
   imports: [
@@ -29,8 +27,9 @@ import { AuthModule } from './auth/auth.module';
     ProductModule,
     CartModule,
     UserModule,
-    CarbrandModule,
     AuthModule,
+    OrderModule,
+    CarbrandModule,
   ],
 
 })

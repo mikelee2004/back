@@ -12,8 +12,12 @@ export class CategoryService {
     @InjectRepository(CategoryEntity)
     private repository: Repository<CategoryEntity>,
   ) {}
-  create(dto: CreateCategoryDto): Promise<CategoryEntity> {
+  create(
+    dto: CreateCategoryDto,
+    image: Express.Multer.File,
+    ): Promise<CategoryEntity> {
     return this.repository.save({
+      image: image.filename,
       name: dto.name,
     });
   }

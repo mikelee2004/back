@@ -15,10 +15,10 @@ export class UserController {
     return this.userService.create(CreateUserDto);
   }
 
-  // @Get('me')
-  // @ApiBearerAuth()
-  // @UseGuards(JwtAuthGuard)
-  // getMe(@UserId() id: number) {
-  //   return this.userService.findById(id)
-  // }
+  @Get('profile')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  getMyProfile(@UserId() id: number) {
+    return this.userService.findById(id)
+  }
 }

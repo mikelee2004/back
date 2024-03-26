@@ -1,4 +1,5 @@
 import { ApiHideProperty } from '@nestjs/swagger';
+import { CarbrandEntity } from 'src/carbrand/entities/carbrand.entity';
 import { ProductEntity } from 'src/product/entities/product.entity';
 import {
     Column, 
@@ -26,8 +27,9 @@ export class CategoryEntity {
     @UpdateDateColumn()
     updatedAt: Date;
     
-    @ApiHideProperty()
-    @OneToMany( () => ProductEntity, (product) => product.category)
-    products: ProductEntity[];
+    // @ApiHideProperty()
+    // @OneToMany( () => ProductEntity, (product) => product.category)
+    // products: ProductEntity[];
+
 }
 

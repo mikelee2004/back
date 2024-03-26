@@ -1,16 +1,21 @@
 import { 
+    ChildEntity,
     Column, 
     Entity, 
     JoinColumn, 
+    ManyToMany, 
     ManyToOne, 
-    PrimaryGeneratedColumn 
+    PrimaryGeneratedColumn, 
+    TableInheritance
 } from "typeorm";
 
 import { CategoryEntity } from "src/category/entities/category.entity";
 import { CartEntity } from "src/cart/entities/cart.entity";
+import { CarbrandEntity } from "src/carbrand/entities/carbrand.entity";
 
 
 @Entity('product')
+@TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export class ProductEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -30,15 +35,34 @@ export class ProductEntity {
     @Column()
     price: number;
 
-    @ManyToOne(() => CategoryEntity, (category) => category.products, {
+    @ManyToOne(() => CategoryEntity, {
         eager: true,
     })
     @JoinColumn()
     category: CategoryEntity;
 
-    @ManyToOne(() => CartEntity, (cart) => cart.item, {
-        lazy: true,
+    @ManyToOne(() => CarbrandEntity, {
+        eager: true,
     })
     @JoinColumn()
-    carts: CartEntity[];
+    brand: CarbrandEntity;
+}
+
+@ChildEntity('Oil')
+export class OilEntity extends ProductEntity {
+    // бочка/бутылка
+    @Column()
+    oilPackType: string;
+
+    // объем бутылки/бочки
+    @Column()
+    oilCapacity: number;
+
+    // назначение масла
+    @Column()
+    oilPurpose: string;
+    
+    // вязкость
+    @Column()
+    oilViscosity: string;
 }

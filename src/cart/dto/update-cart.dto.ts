@@ -5,7 +5,7 @@ import { IsNotEmpty, IsNumber, IsNumberString } from 'class-validator';
 export class UpdateCartDto extends PartialType(CreateCartDto) {
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumberString()
+    @IsNumber()
     itemId: number;
 
     @ApiProperty()

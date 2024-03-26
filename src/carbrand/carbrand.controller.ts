@@ -1,15 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { 
+  Controller, 
+  Get, 
+  Post, 
+  Body, 
+  Patch, 
+  Param, 
+  Delete 
+} from '@nestjs/common';
 import { CarbrandService } from './carbrand.service';
 import { CreateCarbrandDto } from './dto/create-carbrand.dto';
 import { UpdateCarbrandDto } from './dto/update-carbrand.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { CarbrandEntity } from './entities/carbrand.entity';
+import { DeleteResult } from 'typeorm';
 
+
+@ApiTags('carBrand')
 @Controller('carbrand')
 export class CarbrandController {
   constructor(private readonly carbrandService: CarbrandService) {}
 
   @Post()
-  create(@Body() createCarbrandDto: CreateCarbrandDto) {
-    return this.carbrandService.create(createCarbrandDto);
+  create(@Body() dto: CreateCarbrandDto): Promise<CarbrandEntity> {
+    return this.carbrandService.create(dto);
   }
 
   @Get()
@@ -23,12 +36,12 @@ export class CarbrandController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCarbrandDto: UpdateCarbrandDto) {
-    return this.carbrandService.update(+id, updateCarbrandDto);
+  update(@Param('id') id: string, @Body() dto: UpdateCarbrandDto): Promise<CarbrandEntity> {
+    return this.carbrandService.update(+id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.carbrandService.remove(+id);
+  remove(@Param('id') id: string): Promise<DeleteResult> {
+    return this.carbrandService.delete(+id);
   }
 }

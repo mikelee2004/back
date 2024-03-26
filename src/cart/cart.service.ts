@@ -9,11 +9,11 @@ import { UserEntity } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class CartService {
-  async getItemsInCart(user: string): Promise<CartEntity[]> {
+  async getItemsInCart(userId: number): Promise<CartEntity[]> {
     const userCart = await this.cartRepository.find({
       relations: ['item', 'user'], 
     });
-    return (await userCart).filter((item) => item.user.email === user);
+    return (await userCart).filter((item) => item.user.id === userId);
   }
   constructor(
     @InjectRepository(CartEntity)
@@ -26,22 +26,38 @@ export class CartService {
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  async create(dto: CreateCartDto) {
-    const cart = new CartEntity();
-    cart.quantity = dto.quantity;
-    cart.user = await this.userRepository.findOneBy({ id: dto.userId });
-    cart.item = await this.productRepository.findOneBy({ id: dto.itemId });
-
-    const newCart = await this.cartRepository.save(cart);
+  async create(dto: CreateCartDto, userId: number) {
+    const userCart = await this.cartRepository
+    .createQueryBuilder()
+    .select('cart.*')
+    .from(CartEntity, 'cart')
+    .where('cart.userId = :userId and cart.itemId = :itemId', { 
+      userId: userId,
+      itemId: dto.itemId, 
+    })
+    .execute();
+    let cartItem;
+    if (userCart.length === 0) {
+      cartItem = new CartEntity();
+      cartItem.quantity = dto.quantity;
+      cartItem.user = await this.userRepository.findOneBy({ id: userId });
+      cartItem.item = await this.productRepository.findOneBy({
+        id: dto.itemId,
+      });
+    } else {
+      userCart.quantity += dto.quantity;
+    }
+   
+    const newCart = await this.cartRepository.save(cartItem);
     const product = await this.productRepository.findOne({
       where: { id: dto.itemId },
       relations: ['carts'],
     });
-    if (product.carts != null) {
-      product.carts.push(cart);
-    }
-
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
     await this.productRepository.save(product);
+    await this.userRepository.save(user);
 
     return newCart;
   }
@@ -50,8 +66,13 @@ export class CartService {
     return this.cartRepository.find();
   }
 
-  async findOne(id: number) {
-    return this.cartRepository.findOneBy({ id });
+  async get(userId: number) {
+    return await this.cartRepository
+    .createQueryBuilder()
+    .select()
+    .from(CartEntity, 'cart')
+    .where('cart.userId = :userId', { userId: userId })
+    .execute();
   }
 
   async update(id: number, dto: UpdateCartDto) {
@@ -68,4 +89,6 @@ export class CartService {
   async remove(id: number) {
     return this.cartRepository.delete({ id });
   }
+
+  // Планируется реализовать: очистка корзины пользователя.
 }

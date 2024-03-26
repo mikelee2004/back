@@ -15,16 +15,16 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
       image: Express.Multer.File;
 
       @ApiProperty()
-      name = 'Название продукта'
+      name: string;
 
       @ApiProperty()
-      description: 'Описание';
+      description: string;
 
       @ApiProperty()
-      amount: 30;
+      amount: number;
 
       @ApiProperty()
-      price: 3000;
+      price: number;
 
       @ApiProperty()
       category;

@@ -7,16 +7,19 @@ export class CartEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => UserEntity, (user) => user.cart)
+    @Column({nullable: true})
+    total: number;
+    
+    @Column()
+    quantity: number;
+
+    @ManyToOne(() => UserEntity, (user) => user.id)
     @JoinColumn()
     user: UserEntity;
 
-    @ManyToOne(() => ProductEntity, (product) => product.carts, {
-        eager: true,
+    @ManyToOne(() => ProductEntity, (product) => product.id, {
+        eager: true
     })
     @JoinColumn()
     item: ProductEntity;
-
-    @Column()
-    quantity: number;
 }

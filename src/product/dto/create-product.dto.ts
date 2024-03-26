@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsNumberString, IsOptional, IsString } from "class-validator";
 import { CategoryEntity } from "src/category/entities/category.entity";
 
 export class CreateProductDto {
@@ -17,11 +17,11 @@ export class CreateProductDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    name = 'Название продукта'
+    name: string;
 
     @ApiProperty()
     @IsString()
-    description = 'Описание'
+    description: string;
 
     @ApiProperty()
     amount: number = 50;
@@ -31,5 +31,31 @@ export class CreateProductDto {
 
     @ApiProperty()
     @IsString()
-    category: CategoryEntity;
+    categoryId: number;
+
+    @ApiProperty()
+    @IsNumberString()
+    brandId: number;
+
+
+    // МАСЛА!!!!!!!!!!!!!!!
+    @ApiProperty({ required: false})
+    @IsString()
+    @IsOptional()
+    oilPackType: string;
+
+    @ApiProperty({ required: false})
+    @IsString()
+    @IsOptional()
+    oilCapacity: number;
+
+    @ApiProperty({ required: false})
+    @IsString()
+    @IsOptional()
+    oilPurpose: string;
+
+    @ApiProperty({ required: false})
+    @IsString()
+    @IsOptional()
+    oilViscosity: string;
 }

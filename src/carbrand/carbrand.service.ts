@@ -1,26 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCarbrandDto } from './dto/create-carbrand.dto';
 import { UpdateCarbrandDto } from './dto/update-carbrand.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CarbrandEntity } from './entities/carbrand.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CarbrandService {
-  create(createCarbrandDto: CreateCarbrandDto) {
-    return 'This action adds a new carbrand';
+
+  constructor(
+    @InjectRepository(CarbrandEntity)
+    private readonly carbrandRepository: Repository<CarbrandEntity>,
+  ) {}
+  async create(dto: CreateCarbrandDto): Promise<CarbrandEntity> {
+    return this.carbrandRepository.save({name: dto.name});
   }
 
-  findAll() {
-    return `This action returns all carbrand`;
+  async findAll(): Promise<CarbrandEntity[]> {
+    return this.carbrandRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} carbrand`;
+  async findOne(id: number): Promise<CarbrandEntity> {
+    return this.carbrandRepository.findOneBy({ id });
   }
 
-  update(id: number, updateCarbrandDto: UpdateCarbrandDto) {
-    return `This action updates a #${id} carbrand`;
+  async update(id: number, dto: UpdateCarbrandDto) {
+    const toUpdate = await this.carbrandRepository.findOneBy({ id });
+    if (!toUpdate) {
+      throw new BadRequestException('Нет записи с таким брендом!')
+    }
+    if (dto.name) {
+      toUpdate.name = dto.name;
+    }
+    return this.carbrandRepository.save(toUpdate);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} carbrand`;
+  async delete(id: number) {
+    return this.carbrandRepository.delete(id);
   }
 }

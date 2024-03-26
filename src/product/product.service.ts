@@ -5,38 +5,67 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import * as fs from 'fs';
+import { CategoryEntity } from 'src/category/entities/category.entity';
+import { CarbrandEntity } from 'src/carbrand/entities/carbrand.entity';
 
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(ProductEntity)
-    private repository: Repository<ProductEntity>,
+    private productRepository: Repository<ProductEntity>,
+
+    @InjectRepository(CategoryEntity)
+    private categoryRepository: Repository<CategoryEntity>,
+
+    @InjectRepository(CarbrandEntity)
+    private carbrandRepository: Repository<CarbrandEntity>,
   ) {}
   async create(
     dto: CreateProductDto,
     image: Express.Multer.File,
   ): Promise<ProductEntity> {
-    return this.repository.save({
-      image: image.filename,
-      name: dto.name,
-      description: dto.description,
-      amount: dto.amount,
-      price: dto.price,
-      category: dto.category,
+    const category = await this.categoryRepository.findOne({
+      where: { id: dto.categoryId },
     });
+
+    const brand = await this.carbrandRepository.findOne({
+      where: { id: dto.brandId },
+    });
+
+    if (!category) {
+      throw new BadRequestException(
+        `Incorrect category: id=${dto.categoryId}`,
+      );
+    }
+    if (!brand) {
+      throw new BadRequestException(
+        `Incorrect brand: id=${dto.brandId}`,
+      );
+    }
+
+    const product = new ProductEntity();
+    product.image = image.filename;
+    product.name = dto.name;
+    product.description = dto.description;
+    product.amount = dto.amount;
+    product.price = dto.price;
+    product.category = category;
+    product.brand = brand;
+    const newProduct = await this.productRepository.save(product);
+    return newProduct;
   }
 
   async findAll() {
-    return this.repository.find();
+    return this.productRepository.find();
   }
 
   async findOne(id: number) {
-    return this.repository.findOneBy({ id });
+    return this.productRepository.findOneBy({ id });
   }
 
   async update(id: number, dto: UpdateProductDto, image: Express.Multer.File) {
-    const toUpdate = await this.repository.findOneBy({ id });
+    const toUpdate = await this.productRepository.findOneBy({ id });
     if (!toUpdate) {
       throw new BadRequestException(`Записи с id=${id} не найдено`);
     }
@@ -71,10 +100,10 @@ export class ProductService {
       }
       toUpdate.image = image.filename;
     }
-    return this.repository.save(toUpdate)
+    return this.productRepository.save(toUpdate)
   }
 
   async remove(id: number) {
-    return this.repository.delete(id);
+    return this.productRepository.delete(id);
   }
 }
