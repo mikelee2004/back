@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsNotEmpty, IsNumber, IsNumberString, IsString } from "class-validator";
+import { IsNotEmpty, IsString } from "class-validator";
 import { CategoryEntity } from "src/category/entities/category.entity";
 
 export class CreateProductDto {

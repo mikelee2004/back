@@ -7,6 +7,7 @@ import {
 } from "typeorm";
 
 import { CategoryEntity } from "src/category/entities/category.entity";
+import { CartEntity } from "src/cart/entities/cart.entity";
 
 
 @Entity('product')
@@ -34,4 +35,10 @@ export class ProductEntity {
     })
     @JoinColumn()
     category: CategoryEntity;
+
+    @ManyToOne(() => CartEntity, (cart) => cart.item, {
+        lazy: true,
+    })
+    @JoinColumn()
+    carts: CartEntity[];
 }

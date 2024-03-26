@@ -1,26 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from './entities/user.entity';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(UserEntity) 
+    private repository: Repository<UserEntity>,
+  ) {}
+  
+  async create(dto: CreateUserDto) {
+    const existingUser = await this.findByEmail(dto.email);
+    
+    if (existingUser) {
+      throw new BadRequestException(
+        `E-Mail ${dto.email} уже зарегестрирован!`,
+      );
+    }
+    return this.repository.save(dto)
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findByEmail(email: string) {
+    return this.repository.findOneBy({ email })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async findById(id: number) {
+    return this.repository.findOneBy({ id })
   }
 }

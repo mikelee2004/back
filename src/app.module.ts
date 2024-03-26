@@ -8,6 +8,8 @@ import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
 import { UserModule } from './user/user.module';
 import { CarbrandModule } from './carbrand/carbrand.module';
+import { AuthModule } from './auth/auth.module';
+
 
 
 
@@ -28,6 +30,7 @@ import { CarbrandModule } from './carbrand/carbrand.module';
     CartModule,
     UserModule,
     CarbrandModule,
+    AuthModule,
   ],
 
 })
