@@ -69,7 +69,7 @@ export class CartService {
   async get(userId: number) {
     return await this.cartRepository
     .createQueryBuilder()
-    .select()
+    .select('cart')
     .from(CartEntity, 'cart')
     .where('cart.userId = :userId', { userId: userId })
     .execute();

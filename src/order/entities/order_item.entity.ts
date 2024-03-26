@@ -19,9 +19,9 @@ import { OrderEntity } from './order.entity';
     @JoinColumn()
     item: ProductEntity;
   
-    // @OneToOne(() => UserEntity, (user) => user.id)
-    // @JoinColumn({ name: 'userId' })
-    // user: UserEntity;
+    @OneToOne(() => UserEntity, (user) => user.id)
+    @JoinColumn({ name: 'userId' })
+    user: UserEntity;
   
     @Column()
     quantity: number;

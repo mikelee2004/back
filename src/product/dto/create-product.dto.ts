@@ -33,7 +33,7 @@ export class CreateProductDto {
     @IsString()
     categoryId: number;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @IsNumberString()
     brandId: number;
 

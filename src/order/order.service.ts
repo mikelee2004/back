@@ -21,17 +21,7 @@ export class OrderService {
   
     ) {}
   async order(user: UserEntity, address: string): Promise<any> {
-
-
-    // const userOrder = await this.orderItemRepository
-    // .createQueryBuilder()
-    // .select()
-    // .from(OrderItemEntity, 't')
-    // .where('t.userId = :userId', { userId: userId })
-    // .execute();
-
     const cartItems = await this.cartService.getItemsInCart(user.id);
-
     const subTotal = cartItems
       .map((cartItem) => cartItem.quantity * cartItem.item.price)
       .reduce((acc, next) => acc + next);
@@ -42,7 +32,6 @@ export class OrderService {
       if (cartItems[i] && cartItems[i].item) {
         const orderItem = this.orderItemRepository.create({
           item: cartItems[i].item,
-          // user: authUser,
           quantity: cartItems[i].quantity,
         });
         await this.orderItemRepository.save(orderItem);
@@ -57,9 +46,9 @@ export class OrderService {
   async getOrders(userId: number): Promise<OrderItemEntity[]> {
     const userOrder = await this.orderItemRepository
       .createQueryBuilder()
-      .select()
-      .from(OrderItemEntity, 't')
-      .where('t.userId = :userId', { userId: userId })
+      .select('cart')
+      .from(OrderItemEntity, 'cart')
+      .where('cart.userId = :userId', { userId: userId })
       .execute();
     return userOrder;
   }

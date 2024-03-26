@@ -27,9 +27,5 @@ export class CategoryEntity {
     @UpdateDateColumn()
     updatedAt: Date;
     
-    // @ApiHideProperty()
-    // @OneToMany( () => ProductEntity, (product) => product.category)
-    // products: ProductEntity[];
-
 }
 
