@@ -9,8 +9,4 @@ export class CarbrandEntity {
     @Column()
     name: string;
 
-    @OneToMany(() => ProductEntity, product => product.brand)
-    @JoinColumn()
-    product: ProductEntity[];
-
 }

@@ -29,18 +29,9 @@ export class ProductService {
       where: { id: dto.categoryId },
     });
 
-    const brand = await this.carbrandRepository.findOne({
-      where: { id: dto.brandId },
-    });
-
     if (!category) {
       throw new BadRequestException(
         `Incorrect category: id=${dto.categoryId}`,
-      );
-    }
-    if (!brand) {
-      throw new BadRequestException(
-        `Incorrect brand: id=${dto.brandId}`,
       );
     }
 
@@ -51,7 +42,6 @@ export class ProductService {
     product.amount = dto.amount;
     product.price = dto.price;
     product.category = category;
-    product.brand = brand;
     const newProduct = await this.productRepository.save(product);
     return newProduct;
   }

@@ -15,7 +15,6 @@ import { CarbrandEntity } from "src/carbrand/entities/carbrand.entity";
 
 
 @Entity('product')
-@TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export class ProductEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -41,28 +40,6 @@ export class ProductEntity {
     @JoinColumn()
     category: CategoryEntity;
 
-    @ManyToOne(() => CarbrandEntity, {
-        eager: true,
-    })
-    @JoinColumn()
-    brand: CarbrandEntity;
+
 }
 
-@ChildEntity('Oil')
-export class OilEntity extends ProductEntity {
-    // бочка/бутылка
-    @Column()
-    oilPackType: string;
-
-    // объем бутылки/бочки
-    @Column()
-    oilCapacity: number;
-
-    // назначение масла
-    @Column()
-    oilPurpose: string;
-    
-    // вязкость
-    @Column()
-    oilViscosity: string;
-}
