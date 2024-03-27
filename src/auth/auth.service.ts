@@ -31,8 +31,8 @@ export class AuthService {
   }
 
   async register(dto: CreateUserDto) {
-    const isCreateUser = this.configService.get('CREATE_USER') === 'true';
-    if (!isCreateUser) {
+    const createUser = this.configService.get('CREATE_USER') === 'true';
+    if (!createUser) {
       throw new BadRequestException('Вы не можете создать нового пользователя!');
     }
 
