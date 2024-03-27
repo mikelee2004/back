@@ -5,6 +5,7 @@ import {
     JoinColumn, 
     ManyToMany, 
     ManyToOne, 
+    OneToMany, 
     PrimaryGeneratedColumn, 
     TableInheritance
 } from "typeorm";
@@ -39,6 +40,9 @@ export class ProductEntity {
     })
     @JoinColumn()
     category: CategoryEntity;
+
+    @OneToMany(() => CartEntity, (cart) => cart.item)
+    carts: CartEntity[];
 
 
 }
