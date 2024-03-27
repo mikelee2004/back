@@ -12,7 +12,7 @@ export class UserService {
   ) {}
   
   async create(dto: CreateUserDto) {
-    const existingUser = await this.findByEmail(dto.email);
+    const existingUser = await this.findOne(dto.email);
     
     if (existingUser) {
       throw new BadRequestException(
@@ -22,8 +22,11 @@ export class UserService {
     return this.repository.save(dto)
   }
 
-  async findByEmail(email: string) {
-    return this.repository.findOneBy({ email: email })
+  async findOne(email: string) {
+    return await this.repository.findOne({ 
+      where: { 
+        email: email 
+      }})
   }
 
   async findById(id: number) {
