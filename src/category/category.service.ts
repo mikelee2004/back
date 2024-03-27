@@ -22,11 +22,11 @@ export class CategoryService {
     });
   }
 
-  findAll() {
+  async findAll() {
     return this.repository.find();
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return this.repository.findOneBy({ id });
   }
 
