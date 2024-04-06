@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CarbrandEntity } from './entities/carbrand.entity';
 import { CategoryModule } from 'src/category/category.module';
+import { AuthService } from 'src/auth/auth.service';
 
 @Module({
   imports: [

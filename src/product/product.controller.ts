@@ -23,12 +23,12 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @ApiTags('product')
 @Controller('product')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image', { storage: fileStorage} ))
   create(
@@ -47,12 +47,14 @@ export class ProductController {
   download(@Param('path') path: string, @Response() response) {
     return response.sendFile(path, { root: './db_images/product' });
   }
-
+  
   @Get(':id')
   findOne(@Param('id') id: string): Promise<ProductEntity> {
     return this.productService.findOne(+id);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image', { storage: fileStorage }))
@@ -64,6 +66,8 @@ export class ProductController {
     return this.productService.update(+id, dto, image);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string): Promise<DeleteResult> {
     return this.productService.remove(+id);
