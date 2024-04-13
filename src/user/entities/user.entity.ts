@@ -1,3 +1,4 @@
+import { Roles } from "src/utility/common/user-roles.enum";
 import { 
     Column, 
     CreateDateColumn, 
@@ -20,10 +21,6 @@ export class UserEntity {
     @Column()
     password: string;
 
-    @CreateDateColumn({ type: 'timestamp'})
-    createdAt: Date;
-
-    @UpdateDateColumn({ type: 'timestamp'})
-    updatedAt: Date;
-    // cart: any;
+    @Column({type: 'enum', enum: Roles, array: true, default: [Roles.USER]})
+    roles: Roles[]
 }

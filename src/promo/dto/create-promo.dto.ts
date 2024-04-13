@@ -15,18 +15,17 @@ export class CreatePromoDto {
 
   @ApiProperty()
   @IsString()
-  title: string = 'Promo Name';
+  title: string;
 
   @ApiProperty()
   @IsString()
-  text: string = 'Promo Description';
+  text: string;
 
   @ApiProperty()
   @IsNumber()
-  rating: number = 5;
+  rating: number;
 
   @ApiProperty()
   @IsNumber()
-  price: number = 3000;
-
+  price: number;
 }

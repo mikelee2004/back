@@ -24,10 +24,10 @@ export class CreateProductDto {
     description: string;
 
     @ApiProperty()
-    amount: number = 50;
+    amount: number;
 
     @ApiProperty()
-    price: number = 3000;
+    price: number;
 
     @ApiProperty()
     @IsString()

@@ -12,7 +12,6 @@ import { UpdateCartDto } from './dto/update-cart.dto';
 @UseGuards(JwtAuthGuard)
 export class CartController {
   constructor(private readonly cartService: CartService) {}
-
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post()
