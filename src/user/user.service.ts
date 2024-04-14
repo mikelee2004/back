@@ -3,33 +3,46 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import * as argon2 from 'argon2';
+import { JwtService } from '@nestjs/jwt';
+
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity) 
-    private repository: Repository<UserEntity>,
+    private userRepository: Repository<UserEntity>,
+    private readonly jwtService: JwtService,
   ) {}
   
-  async create(dto: CreateUserDto) {
-    const existingUser = await this.findOne(dto.email);
+  async createUser(dto: CreateUserDto) {
+    const userExists = await this.findOne(dto.email);
     
-    if (existingUser) {
+    if (userExists) {
       throw new BadRequestException(
-        `E-Mail ${dto.email} уже зарегестрирован!`,
+        `Email уже зарегестрирован!`,
       );
     }
-    return this.repository.save(dto)
+
+    const user = await this.userRepository.save({
+      username: dto.username,
+      email: dto.email,
+      password: await argon2.hash(dto.password)
+    });
+
+    const token = this.jwtService.sign({ email: CreateUserDto })
+
+    return { user, token }
   }
 
   async findOne(email: string) {
-    return await this.repository.findOne({ 
-      where: { 
-        email: email 
+    return await this.userRepository.findOne({
+      where: {
+        email,
       }})
   }
 
   async findById(id: number) {
-    return this.repository.findOneBy({ id })
+    return this.userRepository.findOneBy({ id })
   }
 }

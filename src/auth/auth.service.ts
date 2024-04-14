@@ -9,6 +9,8 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import * as argon2 from 'argon2';
+import { IUser } from 'src/types/types';
 
 @Injectable()
 export class AuthService {
@@ -18,14 +20,13 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<any> {
+  async validateUser(email: string, password: string) {
     const user = await this.userService.findOne(email);
-    if (user && user.password === password) {
-      const { password, ...result } = user;
-      return result;
+    const passwordMatch = await argon2.verify(user.password, password)
+    if (user && passwordMatch) {
+      return user;
     }
-    
-    return null;
+    throw new BadRequestException("Пароль или email введен неправильно!")
   }
 
   async register(dto: CreateUserDto) {
@@ -35,19 +36,20 @@ export class AuthService {
     }
 
     try {
-      const userData = await this.userService.create(dto);
+      const userData = await this.userService.createUser(dto);
 
       return {
-        token: this.jwtService.sign({id: userData.id }),
+        // token: this.jwtService.sign({id: userData.id }),
       };
     } catch (err) {
       throw new ForbiddenException(err.message);
     }
   }
 
-  async login(user: UserEntity) {
+  async login(user: IUser) {
+    const {id, email} = user
     return {
-      token: this.jwtService.sign({ id: user.id})
+      id, email, token: this.jwtService.sign({ id: user.id, email: user.email})
     }
   }
 }

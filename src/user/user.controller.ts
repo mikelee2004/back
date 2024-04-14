@@ -12,13 +12,6 @@ export class UserController {
 
   @Post('register')
   create(@Body() CreateUserDto: CreateUserDto) {
-    return this.userService.create(CreateUserDto);
-  }
-
-  @Get('profile')
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  getMyProfile(@UserId() id: number) {
-    return this.userService.findById(id)
+    return this.userService.createUser(CreateUserDto);
   }
 }
