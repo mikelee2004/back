@@ -1,55 +1,54 @@
-import { 
-  BadRequestException, 
-  ForbiddenException, 
-  Injectable 
+import {
+  ForbiddenException,
+  Injectable,
+  BadRequestException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { UserService } from 'src/user/user.service';
-import * as argon2 from 'argon2';
-import { IUser } from 'src/types/types';
+import { UserEntity } from '../user/entities/user.entity';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { UsersService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UserService,
+    private usersService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
 
-  async validateUser(email: string, password: string) {
-    const user = await this.userService.findOne(email);
-    const passwordMatch = await argon2.verify(user.password, password)
-    if (user && passwordMatch) {
-      return user;
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.usersService.findByEmail(email);
+
+    if (user && user.password === password) {
+      const { password, ...result } = user;
+      return result;
     }
-    throw new BadRequestException("Пароль или email введен неправильно!")
+
+    return null;
   }
 
   async register(dto: CreateUserDto) {
-    const createUser = this.configService.get('CREATE_USER') === 'true';
-    if (!createUser) {
-      throw new BadRequestException('Вы не можете создать нового пользователя!');
+    const isCreateUsers = this.configService.get('CREATE_USERS') === 'true';
+    if (!isCreateUsers) {
+      throw new BadRequestException('Запрещено создавать новых пользователей!');
     }
 
     try {
-      const userData = await this.userService.createUser(dto);
+      const userData = await this.usersService.create(dto);
 
       return {
-        // token: this.jwtService.sign({id: userData.id }),
+        token: this.jwtService.sign({ id: userData.id }),
       };
     } catch (err) {
       throw new ForbiddenException(err.message);
     }
   }
 
-  async login(user: IUser) {
-    const {id, email} = user
+  async login(user: UserEntity) {
     return {
-      id, email, token: this.jwtService.sign({ id: user.id, email: user.email})
-    }
+      token: this.jwtService.sign({ id: user.id }),
+    };
   }
 }
