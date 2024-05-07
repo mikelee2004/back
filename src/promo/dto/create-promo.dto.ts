@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreatePromoDto {
   @ApiProperty({
@@ -21,11 +21,4 @@ export class CreatePromoDto {
   @IsString()
   text: string;
 
-  @ApiProperty()
-  @IsNumber()
-  rating: number;
-
-  @ApiProperty()
-  @IsNumber()
-  price: number;
 }

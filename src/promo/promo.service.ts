@@ -22,8 +22,8 @@ export class PromoService {
       image: image.filename,
       title: dto.title,
       text: dto.text,
-      rating: dto.rating,
-      price: dto.price,
+      // rating: dto.rating,
+      // price: dto.price,
     });
   }
 
@@ -46,12 +46,12 @@ export class PromoService {
     if (dto.title) {
       toUpdate.title = dto.title;
     }
-    if (dto.rating) {
-      toUpdate.rating = dto.rating;
-    }
-    if (dto.price) {
-      toUpdate.price = dto.price
-    }
+    // if (dto.rating) {
+    //   toUpdate.rating = dto.rating;
+    // }
+    // if (dto.price) {
+    //   toUpdate.price = dto.price
+    // }
     if (image) {
       if (toUpdate.image !== image.filename) {
         fs.unlink(`db_images/promo/${toUpdate.image}`, (err) => {
