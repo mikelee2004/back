@@ -24,6 +24,7 @@ async function bootstrap() {
       tagsSorter: 'alpha',
     },
   });
+  
   const port = parseInt(process.env.PORT);
   console.log('port = ', process.env.PORT)
   const server = process.env.SERVER;

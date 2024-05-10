@@ -1,3 +1,4 @@
+import { timestamp } from "rxjs";
 import { Roles } from "src/utility/common/user-roles.enum";
 import { 
     Column, 
@@ -15,11 +16,17 @@ export class UserEntity {
     @Column()
     username: string;
 
-    @Column({unique: true})
+    @Column({ unique: true })
     email: string;
 
     @Column()
     password: string;
+
+    @CreateDateColumn({ type: 'timestamp'})
+    createdAt: Date;
+
+    @UpdateDateColumn({ type: 'timestamp'})
+    updatedAt: Date;
 
     @Column({type: 'enum', enum: Roles, array: true, default: [Roles.USER]})
     roles: Roles[]

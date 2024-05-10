@@ -12,24 +12,29 @@ import { UpdateCartDto } from './dto/update-cart.dto';
 @UseGuards(JwtAuthGuard)
 export class CartController {
   constructor(private readonly cartService: CartService) {}
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+
+  // @ApiBearerAuth()
+  // @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() dto: CreateCartDto, @Req() req: any) {
   console.log("**", req.id);
     return this.cartService.create(dto, req.id);
   }
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+
+
+  // @ApiBearerAuth()
+  // @UseGuards(JwtAuthGuard)
   @Get()
   get(@Req() req: any) {
     console.log(req);
     return this.cartService.getItemsInCart(req.id);
   }
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+
+
+  // @ApiBearerAuth()
+  // @UseGuards(JwtAuthGuard)
   @Patch()
   patch(@Body() dto: UpdateCartDto, @Req() req: any) {
-    return this.cartService.update(req.id, dto);
+    return this.cartService.update(dto, req.id);
   }
 }

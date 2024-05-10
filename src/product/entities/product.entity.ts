@@ -1,5 +1,4 @@
 import { 
-    ChildEntity,
     Column, 
     Entity, 
     JoinColumn, 
@@ -7,7 +6,6 @@ import {
     ManyToOne, 
     OneToMany, 
     PrimaryGeneratedColumn, 
-    TableInheritance
 } from "typeorm";
 
 import { CategoryEntity } from "src/category/entities/category.entity";
@@ -41,9 +39,15 @@ export class ProductEntity {
     @JoinColumn()
     category: CategoryEntity;
 
+
+    @ManyToOne(() => CarbrandEntity, {
+        eager: true,
+    })
+    @JoinColumn()
+    carbrand: CarbrandEntity;
+
     @OneToMany(() => CartEntity, (cart) => cart.item)
     carts: CartEntity[];
-
 
 }
 

@@ -10,11 +10,13 @@ import { UserEntity } from 'src/user/entities/user.entity';
 @Injectable()
 export class CartService {
   async getItemsInCart(userId: number): Promise<CartEntity[]> {
-    const userCart = await this.cartRepository.find({
-      relations: ['item', 'user'], 
+    console.log(userId);
+    const userCart = await this.cartRepository.findBy({
+      user: {id: userId}, 
     });
-    return (await userCart).filter((item) => item.user.id === userId);
+    return userCart;
   }
+
   constructor(
     @InjectRepository(CartEntity)
     private cartRepository: Repository<CartEntity>,
@@ -27,39 +29,46 @@ export class CartService {
   ) {}
 
   async create(dto: CreateCartDto, userId: number) {
-    const userCart = await this.cartRepository
-    .createQueryBuilder()
-    .select('cart.*')
-    .from(CartEntity, 'cart')
-    .where('cart.userId = :userId and cart.itemId = :itemId', { 
-      userId: userId,
-      itemId: dto.itemId, 
-    })
-    .execute();
-    let cartItem;
-    if (userCart.length === 0) {
-      cartItem = new CartEntity();
-      cartItem.quantity = dto.quantity;
-      cartItem.user = await this.userRepository.findOneBy({ id: userId });
-      cartItem.item = await this.productRepository.findOneBy({
-        id: dto.itemId,
-      });
-    } else {
-      userCart.quantity += dto.quantity;
-    }
-   
-    const newCart = await this.cartRepository.save(cartItem);
-    const product = await this.productRepository.findOne({
-      where: { id: dto.itemId },
-      relations: ['carts'],
-    });
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-    });
-    await this.productRepository.save(product);
-    await this.userRepository.save(user);
 
-    return newCart;
+    const cartItem = new CartEntity();
+    cartItem.user = await this.userRepository.findOneBy({ id: userId});
+    console.log(cartItem.user.id, userId)
+    cartItem.item = await this.productRepository.findOneBy({ id: dto.itemId })
+    cartItem.quantity = dto.quantity;
+    return await this.cartRepository.save(cartItem)
+  //   const userCart = await this.cartRepository
+  //   .createQueryBuilder()
+  //   .select('cart.*')
+  //   .from(CartEntity, 'cart')
+  //   .where('cart.userId = :userId and cart.itemId = :itemId', { 
+  //     userId: userId,
+  //     itemId: dto.itemId, 
+  //   })
+  //   .execute();
+  //   let cartItem;
+  //   if (userCart.length === 0) {
+  //     cartItem = new CartEntity();
+  //     cartItem.quantity = dto.quantity;
+  //     cartItem.user = await this.userRepository.findOneBy({ id: userId });
+  //     cartItem.item = await this.productRepository.findOneBy({
+  //       id: dto.itemId,
+  //     });
+  //   } else {
+  //     userCart.quantity += dto.quantity;
+  //   }
+   
+  //   const newCart = await this.cartRepository.save(cartItem);
+  //   const product = await this.productRepository.findOne({
+  //     where: { id: dto.itemId },
+  //     relations: ['carts'],
+  //   });
+  //   const user = await this.userRepository.findOne({
+  //     where: { id: userId },
+  //   });
+  //   await this.productRepository.save(product);
+  //   await this.userRepository.save(user);
+
+  //   return newCart;
   }
 
   async findAll() {
@@ -68,27 +77,46 @@ export class CartService {
 
   async get(userId: number) {
     return await this.cartRepository
-    .createQueryBuilder()
-    .select('cart')
-    .from(CartEntity, 'cart')
-    .where('cart.userId = :userId', { userId: userId })
-    .execute();
+      .createQueryBuilder()
+      .select()
+      .from(CartEntity, 't')
+      .where('t.userId = :userId', { userId: userId })
+      .execute();
   }
 
-  async update(id: number, dto: UpdateCartDto) {
-    const toUpdate = await this.cartRepository.findOneBy({ id });
-    if (!toUpdate) {
-      throw new BadRequestException(`Записи с id=${id} не нашлось! :(`);
+  async update(dto: UpdateCartDto, userId: number) {
+    const userCart = await this.cartRepository
+      .createQueryBuilder()
+      .select('t.*')
+      .from(CartEntity, 't')
+      .where('t.userId = :userId and t.itemId = :itemId', {
+        userId: userId,
+        itemId: dto.itemId,
+      })
+      .execute();
+    if (userCart.length === 0) {
+      throw new BadRequestException(`Записи с id=${dto.itemId} не найдено`);
     }
-    if (dto.quantity) {
-      toUpdate.quantity = dto.quantity;
-    }
-    return this.cartRepository.save(toUpdate);
+    console.log('update');
+    console.log(userCart);
+
+    userCart[0].quantity = userCart[0].quantity + dto.quantity;
+    const updatedCart = await this.cartRepository.save(userCart);
+    console.log('1d');
+    return updatedCart;
   }
 
   async remove(id: number) {
-    return this.cartRepository.delete({ id });
+    return this.cartRepository.delete(id);
   }
 
-  // Планируется реализовать: очистка корзины пользователя.
+  async clearCart(userId: number) {
+    await this.cartRepository
+      .createQueryBuilder()
+      .delete()
+      .from(CartEntity)
+      .where('userId = :userId', { userId: userId })
+      .execute();
+  }
+
 }

@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import * as argon2 from 'argon2';
-import { JwtService } from '@nestjs/jwt';
+
 
 @Injectable()
 export class UsersService {
@@ -21,8 +20,9 @@ export class UsersService {
         `Email ${dto.email} уже зарегестрирован!`,
       );
     }
-
-    return this.repository.save(dto);
+    const user = await this.repository.save(dto);
+    await this.repository.save(user)
+    return user;
   }
 
   async findByEmail(email: string) {
