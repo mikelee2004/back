@@ -12,11 +12,12 @@ import { CarbrandModule } from 'src/carbrand/carbrand.module';
 @Module({
   imports: [
     ConfigModule, 
-    TypeOrmModule.forFeature([ProductEntity, CategoryEntity, CarbrandEntity, CarbrandEntity]),
+    TypeOrmModule.forFeature([ProductEntity, CategoryEntity]),
     CategoryModule,
     CarbrandModule,
   ],
   controllers: [ProductController],
   providers: [ProductService],
+  exports: [ProductService]
 })
 export class ProductModule {}

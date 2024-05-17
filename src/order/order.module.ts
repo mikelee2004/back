@@ -11,20 +11,18 @@ import { CartService } from 'src/cart/cart.service';
 import { ProductService } from 'src/product/product.service';
 import { CarbrandEntity } from 'src/carbrand/entities/carbrand.entity';
 import { OrderItemEntity } from './entities/order_item.entity';
+import { UserModule } from 'src/user/user.module';
+import { CartModule } from 'src/cart/cart.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       OrderItemEntity,
-      OrderEntity,
-      CarbrandEntity,
-      ProductEntity,
-      CartEntity,
-      UserEntity,
-      CategoryEntity
-    ]),
+      OrderEntity]),
+    UserModule,
+    CartModule,
   ],
   controllers: [OrderController],
-  providers: [OrderService, CartService, ProductService],
+  providers: [OrderService],
 })
 export class OrderModule {}

@@ -11,6 +11,9 @@ import {
 import { CategoryEntity } from "src/category/entities/category.entity";
 import { CartEntity } from "src/cart/entities/cart.entity";
 import { CarbrandEntity } from "src/carbrand/entities/carbrand.entity";
+import { CartItemEntity } from "src/cart/entities/cart-item.entity";
+import { ApiHideProperty } from "@nestjs/swagger";
+import { OrderItemEntity } from "src/order/entities/order_item.entity";
 
 
 @Entity('product')
@@ -46,8 +49,12 @@ export class ProductEntity {
     @JoinColumn()
     carbrand: CarbrandEntity;
 
-    @OneToMany(() => CartEntity, (cart) => cart.item)
-    carts: CartEntity[];
+    @ApiHideProperty()
+    @OneToMany(() => CartItemEntity, (cart) => cart.product)
+    cart: CartItemEntity[];
+    @ApiHideProperty()
+    @OneToMany(() => OrderItemEntity, (orderItems) => orderItems.product)
+    orderItems: CartItemEntity[];
 
 }
 

@@ -10,25 +10,18 @@ import {
 import { UserEntity } from 'src/user/entities/user.entity';
 import { OrderEntity } from './order.entity';
   
-  @Entity('order_item')
-  export class OrderItemEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
-  
-    @ManyToOne(() => ProductEntity, (product) => product.id)
-    @JoinColumn()
-    item: ProductEntity;
-  
-    @OneToOne(() => UserEntity, (user) => user.id)
-    @JoinColumn({ name: 'userId' })
-    user: UserEntity;
-  
-    @Column()
-    quantity: number;
-  
-    @Column({ default: false })
-    pending: boolean;
+@Entity()
+export class OrderItemEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @ManyToOne(() => OrderEntity, (order) => order.items)
-    order: OrderEntity;
-  }
+  @Column()
+  orderPrice: number;
+
+  @ManyToOne(() => OrderEntity, (order) => order.orderItems)
+  order: OrderEntity;
+
+  @ManyToOne(() => ProductEntity, (product) => product.orderItems)
+  @JoinColumn()
+  product: ProductEntity;
+}

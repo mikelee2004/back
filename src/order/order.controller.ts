@@ -1,36 +1,28 @@
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Body, 
-  Param, 
+import {
+  Controller,
+  Post,
+  Request,
   UseGuards,
-  Req
+  Body,
+  Get,
 } from '@nestjs/common';
-
-import { OrderService } from './order.service';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { OrderService } from 'src/order/order.service';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-
+import { CreateOrderDto } from './dto/create-order.dto';
 @ApiTags('order')
-@Controller('order')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
+@Controller('order')
 export class OrderController {
-  constructor(private readonly orderService: OrderService) {}
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  @Post()
-  create(@Body() dto: CreateOrderDto, @Req() req: any) {
-    console.log(req);
-    return this.orderService.order(req.user, dto.address);
+  constructor(private orderService: OrderService) {}
+
+  @Post('post')
+  async getItemsFromBasket(@Body() dto: CreateOrderDto, @Request() req: any) {
+    return await this.orderService.order(req, dto);
   }
-  
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  findOne(@Req() req: any) {
-    return this.orderService.getOrders(req.user.id);
+  @Get('getOrders')
+  async getItemsFromOrder(@Request() req: any) {
+    return await this.orderService.getOrdersUser(req);
   }
 }

@@ -1,55 +1,85 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { OrderEntity } from './entities/order.entity';
+import { OrderEntity } from 'src/order/entities/order.entity';
 import { Repository } from 'typeorm';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { CartService } from 'src/cart/cart.service';
 import { OrderItemEntity } from './entities/order_item.entity';
+import { CartService } from 'src/cart/cart.service';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { UsersService } from 'src/user/user.service';
+import { CreateOrderDto } from './dto/create-order.dto';
 
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectRepository(OrderItemEntity)
-    private orderItemRepository: Repository<OrderItemEntity>,
-    
     @InjectRepository(OrderEntity)
     private orderRepository: Repository<OrderEntity>,
+    @InjectRepository(OrderItemEntity)
+    private orderitemRepository: Repository<OrderItemEntity>,
+    private readonly cartService: CartService,
+    private readonly userService: UsersService,
+  ) {}
+  async order(req: any, dto: CreateOrderDto) {
+    const userCart = await this.cartService.getUserCart(req.user);
+    if (userCart.CartItems.length == 0) {
+      throw new BadRequestException(
+        'Вы не можете оформить заказ с пустой корзиной',
+      );
+    }
+    const order = await this.orderRepository.create({
+      Fullname: dto.Fullname,
+      address: dto.address,
+      totalPrice: 0,
+      user: req.user,
+      orderItems: [],
+    });
 
-    @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
-    private cartService: CartService,
-  
-    ) {}
-  async order(user: UserEntity, address: string): Promise<any> {
-    const cartItems = await this.cartService.getItemsInCart(user.id);
-    const subTotal = cartItems
-      .map((cartItem) => cartItem.quantity * cartItem.item.price)
-      .reduce((acc, next) => acc + next);
-
-    const order = this.orderRepository.create();
-    order.items = [];
-    for (let i = 0; i <= cartItems.length; i++) {
-      if (cartItems[i] && cartItems[i].item) {
-        const orderItem = this.orderItemRepository.create({
-          item: cartItems[i].item,
-          quantity: cartItems[i].quantity,
+    for (let i = 0; i <= userCart.CartItems.length; i++) {
+      if (userCart.CartItems[i] && userCart.CartItems[i].product) {
+        const orderItem = this.orderitemRepository.create({
+          product: userCart.CartItems[i].product,
         });
-        await this.orderItemRepository.save(orderItem);
-        order.items.push(orderItem);
+        orderItem.orderPrice = userCart.CartItems[i].cartPrice;
+        await this.orderitemRepository.save(orderItem);
+        order.orderItems.push(orderItem);
       }
     }
-    order.address = address;
-    order.totalPrice = subTotal;
-    order.user = user;
-    this.orderRepository.save(order);
+    if (order.orderItems == null) {
+      return 0;
     }
-  async getOrders(userId: number): Promise<OrderItemEntity[]> {
-    const userOrder = await this.orderItemRepository
-      .createQueryBuilder()
-      .select('cart')
-      .from(OrderItemEntity, 'cart')
-      .where('cart.userId = :userId', { userId: userId })
-      .execute();
+    let sum = 0;
+    order.orderItems.forEach((a) => (sum += a.orderPrice));
+    order.totalPrice = sum;
+
+    order.user = req.user;
+    const orderNew = await this.orderRepository.save(order);
+    await this.cartService.removeCart(req.user.id);
+    return orderNew;
+  }
+
+  async getItemsFromCart(user: any) {
+    const items = await this.cartService.findAll(user);
+    return items;
+  }
+  async create(user: UserEntity, dto: CreateOrderDto) {
+    const order = new OrderEntity();
+    order.Fullname = dto.Fullname;
+    order.address = dto.address;
+    order.totalPrice = 0;
+    order.user = user;
+    await this.orderRepository.save(order);
+    return order;
+  }
+  async getOrdersUser(req: any) {
+    const userOrder = await this.orderRepository.find({
+      relations: {
+        orderItems: {
+          product: true,
+        },
+      },
+      where: {
+        user: req.user,
+      },
+    });
     return userOrder;
   }
 }

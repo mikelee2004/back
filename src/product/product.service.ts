@@ -18,8 +18,6 @@ export class ProductService {
     @InjectRepository(CategoryEntity)
     private categoryRepository: Repository<CategoryEntity>,
 
-    @InjectRepository(CarbrandEntity)
-    private carbrandRepository: Repository<CarbrandEntity>,
   ) {}
   async create(
     dto: CreateProductDto,

@@ -1,9 +1,12 @@
 import { timestamp } from "rxjs";
+import { CartEntity } from "src/cart/entities/cart.entity";
+import { OrderEntity } from "src/order/entities/order.entity";
 import { Roles } from "src/utility/common/user-roles.enum";
 import { 
     Column, 
     CreateDateColumn, 
     Entity, 
+    OneToOne, 
     PrimaryGeneratedColumn, 
     UpdateDateColumn 
 } from "typeorm";
@@ -30,4 +33,10 @@ export class UserEntity {
 
     @Column({type: 'enum', enum: Roles, array: true, default: [Roles.USER]})
     roles: Roles[]
+
+    @OneToOne(() => OrderEntity, (order) => order.user)
+    order: OrderEntity;
+
+    @OneToOne(() => CartEntity, (cart) => cart.user)
+    cart: CartEntity;
 }
