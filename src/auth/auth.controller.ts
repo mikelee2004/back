@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local.guard';
 import { LoginUserDto } from 'src/user/dto/login-user.dto';
 
+
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {
@@ -14,10 +15,9 @@ export class AuthController {
 
   
   @Post('login')
-  @UseGuards(LocalAuthGuard)
   @ApiBody({ type: LoginUserDto })
-  async login(@Request() req) {
-    return this.authService.login(req.user as UserEntity);
+  async login(@Body() dto: LoginUserDto) {
+    return this.authService.login(dto);
   }
 
   @Post('register')
