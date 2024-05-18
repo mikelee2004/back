@@ -25,12 +25,12 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
-
-  @Post()
+  
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
+  @Post()
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('image', { storage: fileStorage} ))
+  @UseInterceptors(FileInterceptor('image', { storage: fileStorage } ))
   create(
     @Body() dto: CreateProductDto,
     @UploadedFile() image: Express.Multer.File,

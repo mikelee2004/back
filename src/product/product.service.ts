@@ -6,7 +6,7 @@ import { ProductEntity } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import * as fs from 'fs';
 import { CategoryEntity } from 'src/category/entities/category.entity';
-import { CarbrandEntity } from 'src/carbrand/entities/carbrand.entity';
+
 
 
 @Injectable()
@@ -17,8 +17,8 @@ export class ProductService {
 
     @InjectRepository(CategoryEntity)
     private categoryRepository: Repository<CategoryEntity>,
-
   ) {}
+
   async create(
     dto: CreateProductDto,
     image: Express.Multer.File,
@@ -29,7 +29,7 @@ export class ProductService {
 
     if (!category) {
       throw new BadRequestException(
-        `Incorrect category: id=${dto.categoryId}`,
+        `Не существует такой категории: id=${dto.categoryId}`,
       );
     }
 
@@ -37,7 +37,6 @@ export class ProductService {
     product.image = image.filename;
     product.name = dto.name;
     product.description = dto.description;
-    product.amount = dto.amount;
     product.price = dto.price;
     product.category = category;
     const newProduct = await this.productRepository.save(product);
@@ -69,11 +68,7 @@ export class ProductService {
     if (dto.description) {
       toUpdate.description = dto.description;
     }
-    
-    if (dto.amount) {
-      toUpdate.amount = dto.amount;
-    }
-    
+
     if (dto.price) {
       toUpdate.price = dto.price;
     }

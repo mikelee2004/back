@@ -16,9 +16,6 @@ export class UserEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    username: string;
-
     @Column({ unique: true })
     email: string;
 
@@ -34,9 +31,4 @@ export class UserEntity {
     @Column({type: 'enum', enum: Roles, array: true, default: [Roles.USER]})
     roles: Roles[]
 
-    @OneToOne(() => OrderEntity, (order) => order.user)
-    order: OrderEntity;
-
-    @OneToOne(() => CartEntity, (cart) => cart.user)
-    cart: CartEntity;
 }

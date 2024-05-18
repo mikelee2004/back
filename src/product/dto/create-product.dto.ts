@@ -24,9 +24,6 @@ export class CreateProductDto {
     description: string;
 
     @ApiProperty()
-    amount: number;
-
-    @ApiProperty()
     price: number;
 
     @ApiProperty()

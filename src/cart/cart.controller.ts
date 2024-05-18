@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  Req,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { CreateCartDto } from './dto/create-cart.dto';
@@ -24,32 +25,23 @@ export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Post()
-  async CreateCartItemDto(@Body() dto: CreateCartDto, @Request() req: any) {
-    return await this.cartService.CreateCartItemDto(dto, req.user);
+  async create(@Body() dto: CreateCartDto, @Req() req: any) {
+    console.log("**", req.id)
+    return await this.cartService.create(dto, req.id);
   }
 
   @Get()
   get(@Request() req: any) {
-    return this.cartService.get(req.user.id);
-  }
-
-  @Get('all')
-  findAll(@Request() req: any) {
-    return this.cartService.findAll(req.user);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string, @Request() req: any) {
-    return this.cartService.findOne(+id, req.user);
+    return this.cartService.getItemsInCart(req.id);
   }
 
   @Patch()
-  async update(@Body() dto: UpdateCartDto, @Request() req: any) {
-    return await this.cartService.update(dto, req.user);
+  async update(@Body() dto: UpdateCartDto, @Req() req: any) {
+    return await this.cartService.update(dto, req.id);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string, @Request() req: any): Promise<DeleteResult> {
-    return this.cartService.remove(+id, req.user);
+  delete(@Param('id') id: string): Promise<DeleteResult> {
+    return this.cartService.remove(+id);
   }
 }

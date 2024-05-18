@@ -20,9 +20,7 @@ export class UsersService {
         `Email ${dto.email} уже зарегестрирован!`,
       );
     }
-    const user = await this.repository.save(dto);
-    await this.repository.save(user)
-    return user;
+    return this.repository.save(dto)
   }
 
   async findByEmail(email: string) {
