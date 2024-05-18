@@ -9,7 +9,7 @@ import { CartModule } from './cart/cart.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { OrderModule } from './order/order.module';
-import { CarbrandModule } from './carbrand/carbrand.module';
+
 
 @Module({
   imports: [
@@ -29,7 +29,6 @@ import { CarbrandModule } from './carbrand/carbrand.module';
     UserModule,
     AuthModule,
     OrderModule,
-    CarbrandModule,
   ],
 
 })

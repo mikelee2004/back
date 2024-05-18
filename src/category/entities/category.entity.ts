@@ -1,5 +1,4 @@
 import { ApiHideProperty } from '@nestjs/swagger';
-import { CarbrandEntity } from 'src/carbrand/entities/carbrand.entity';
 import { ProductEntity } from 'src/product/entities/product.entity';
 import {
     Column, 

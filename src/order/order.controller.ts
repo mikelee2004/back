@@ -5,6 +5,7 @@ import {
   UseGuards,
   Body,
   Get,
+  Req,
 } from '@nestjs/common';
 import { OrderService } from 'src/order/order.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -17,12 +18,12 @@ import { CreateOrderDto } from './dto/create-order.dto';
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
-  @Post('post')
-  async getItemsFromBasket(@Body() dto: CreateOrderDto, @Request() req: any) {
-    return await this.orderService.order(req, dto);
+  @Post("Create Order")
+  create(@Body() dto: CreateOrderDto, @Req() req: any) {
+    return this.orderService.order(req.user, dto.address);
   }
-  @Get('getOrders')
-  async getItemsFromOrder(@Request() req: any) {
-    return await this.orderService.getOrdersUser(req);
+  @Get(':id')
+  findOne(@Req() req: any) {
+    return this.orderService.getOrders(req.user.id);
   }
 }

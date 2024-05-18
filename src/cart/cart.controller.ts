@@ -18,26 +18,25 @@ import { UpdateCartDto } from './dto/update-cart.dto';
 import { DeleteResult } from 'typeorm';
 
 @ApiTags('cart')
+@Controller('cart')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller('cart')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Post()
   async create(@Body() dto: CreateCartDto, @Req() req: any) {
-    console.log("**", req.id)
     return await this.cartService.create(dto, req.id);
   }
 
   @Get()
-  get(@Request() req: any) {
+  get(@Req() req: any) {
     return this.cartService.getItemsInCart(req.id);
   }
 
   @Patch()
-  async update(@Body() dto: UpdateCartDto, @Req() req: any) {
-    return await this.cartService.update(dto, req.id);
+  patch(@Body() dto: UpdateCartDto, @Req() req: any) {
+    return this.cartService.update(dto, req.id);
   }
 
   @Delete(':id')

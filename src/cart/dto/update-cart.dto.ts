@@ -8,11 +8,11 @@ export class UpdateCartDto extends PartialType(CreateCartDto) {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
-    itemId: number;
+    productId: number;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
     quantity: number;
-    
+
 }

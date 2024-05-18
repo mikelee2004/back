@@ -1,7 +1,7 @@
 import { ProductEntity } from "src/product/entities/product.entity";
 import { UserEntity } from "src/user/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { ApiHideProperty } from "@nestjs/swagger";
+
 
 @Entity('cart')
 export class CartEntity {
@@ -15,7 +15,7 @@ export class CartEntity {
     eager: true,
   })
   @JoinColumn()
-  item: ProductEntity;
+  product: ProductEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn()

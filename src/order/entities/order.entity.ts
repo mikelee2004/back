@@ -11,27 +11,22 @@ import {
 import { UserEntity } from 'src/user/entities/user.entity';
 import { OrderItemEntity } from './order_item.entity';
   
-@Entity()
+@Entity('order')
 export class OrderEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  Fullname: string;
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  @JoinColumn({name: 'userId'})
+  user: UserEntity;
 
   @Column()
   address: string;
 
   @Column()
-  totalPrice: number;
+  price: number;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @OneToOne(() => UserEntity, (user) => user.order)
-  @JoinColumn()
-  user: UserEntity;
-
-  @OneToMany(() => OrderItemEntity, (orderItems) => orderItems.order)
-  orderItems: OrderItemEntity[];
+  @OneToMany(() => OrderItemEntity, (orderItem) => orderItem.order)
+  @JoinColumn({ name: "products"})
+  products: OrderItemEntity[];
 }

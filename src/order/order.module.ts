@@ -9,20 +9,24 @@ import { CategoryEntity } from 'src/category/entities/category.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CartService } from 'src/cart/cart.service';
 import { ProductService } from 'src/product/product.service';
-import { CarbrandEntity } from 'src/carbrand/entities/carbrand.entity';
 import { OrderItemEntity } from './entities/order_item.entity';
 import { UserModule } from 'src/user/user.module';
 import { CartModule } from 'src/cart/cart.module';
+import { PromoEntity } from 'src/promo/entities/promo.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       OrderItemEntity,
-      OrderEntity]),
-    UserModule,
-    CartModule,
+      OrderEntity,
+      ProductEntity,
+      CartEntity,
+      UserEntity,
+      CategoryEntity,
+      PromoEntity,
+    ]),
   ],
   controllers: [OrderController],
-  providers: [OrderService],
+  providers: [OrderService, CartService, ProductService],
 })
 export class OrderModule {}
