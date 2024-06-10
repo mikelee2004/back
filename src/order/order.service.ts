@@ -1,11 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { OrderEntity } from 'src/order/entities/order.entity';
-import { Repository } from 'typeorm';
-import { OrderItemEntity } from './entities/order_item.entity';
-import { CartService } from 'src/cart/cart.service';
-import { UserEntity } from 'src/user/entities/user.entity';
-
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { OrderEntity } from "src/order/entities/order.entity";
+import { Repository } from "typeorm";
+import { OrderItemEntity } from "./entities/order_item.entity";
+import { CartService } from "src/cart/cart.service";
+import { UserEntity } from "src/user/entities/user.entity";
 
 @Injectable()
 export class OrderService {
@@ -17,10 +16,8 @@ export class OrderService {
     private cartService: CartService,
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
-    
   ) {}
   async order(user: UserEntity, address: string): Promise<any> {
-
     const cartItems = await this.cartService.getItemsInCart(user.id);
     const subTotal = cartItems
       .map((cartItem) => cartItem.quantity * cartItem.product.price)
@@ -48,9 +45,9 @@ export class OrderService {
   async getOrders(userId: number): Promise<OrderItemEntity[]> {
     const userOrder = await this.orderItemRepository
       .createQueryBuilder()
-      .select('t.*')
-      .from(OrderItemEntity, 't')
-      .where('t.userId = :userId', { userId: userId })
+      .select("t.*")
+      .from(OrderItemEntity, "t")
+      .where("t.userId = :userId", { userId: userId })
       .execute();
     return userOrder;
   }

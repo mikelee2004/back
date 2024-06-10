@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CategoryEntity } from './entities/category.entity';
-import * as fs from 'fs';
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { DeleteResult, Repository } from "typeorm";
+import { CreateCategoryDto } from "./dto/create-category.dto";
+import { UpdateCategoryDto } from "./dto/update-category.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { CategoryEntity } from "./entities/category.entity";
+import * as fs from "fs";
 
 @Injectable()
 export class CategoryService {
@@ -15,7 +15,7 @@ export class CategoryService {
   create(
     dto: CreateCategoryDto,
     image: Express.Multer.File,
-    ): Promise<CategoryEntity> {
+  ): Promise<CategoryEntity> {
     return this.repository.save({
       image: image.filename,
       name: dto.name,
@@ -33,7 +33,7 @@ export class CategoryService {
   async update(id: number, dto: UpdateCategoryDto, image: Express.Multer.File) {
     const toUpdate = await this.repository.findOneBy({ id });
     if (!toUpdate) {
-      throw new BadRequestException('Запись с id=${id} не найдена');
+      throw new BadRequestException("Запись с id=${id} не найдена");
     }
     if (dto.name) {
       toUpdate.name = dto.name;

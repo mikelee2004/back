@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreatePromoDto } from './dto/create-promo.dto';
-import { UpdatePromoDto } from './dto/update-promo.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { PromoEntity } from './entities/promo.entity';
-import { DeleteResult, Repository } from 'typeorm';
-import * as fs from 'fs'
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { CreatePromoDto } from "./dto/create-promo.dto";
+import { UpdatePromoDto } from "./dto/update-promo.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { PromoEntity } from "./entities/promo.entity";
+import { DeleteResult, Repository } from "typeorm";
+import * as fs from "fs";
 
 @Injectable()
 export class PromoService {
@@ -12,7 +12,6 @@ export class PromoService {
     @InjectRepository(PromoEntity)
     private repository: Repository<PromoEntity>,
   ) {}
-
 
   async create(
     dto: CreatePromoDto,

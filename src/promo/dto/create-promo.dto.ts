@@ -1,13 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsString } from "class-validator";
 
 export class CreatePromoDto {
   @ApiProperty({
-    type: 'file',
+    type: "file",
     properties: {
       file: {
-        type: 'string',
-        format: 'binary',
+        type: "string",
+        format: "binary",
       },
     },
   })
@@ -20,5 +20,4 @@ export class CreatePromoDto {
   @ApiProperty()
   @IsString()
   text: string;
-
 }

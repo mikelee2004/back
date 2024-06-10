@@ -2,12 +2,12 @@ import {
   ForbiddenException,
   Injectable,
   BadRequestException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { UserEntity } from '../user/entities/user.entity';
-import { CreateUserDto } from '../user/dto/create-user.dto';
-import { UsersService } from '../user/user.service';
+} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
+import { UserEntity } from "../user/entities/user.entity";
+import { CreateUserDto } from "../user/dto/create-user.dto";
+import { UsersService } from "../user/user.service";
 
 @Injectable()
 export class AuthService {
@@ -29,9 +29,9 @@ export class AuthService {
   }
 
   async register(dto: CreateUserDto) {
-    const isCreateUsers = this.configService.get('CREATE_USERS') === 'true';
+    const isCreateUsers = this.configService.get("CREATE_USERS") === "true";
     if (!isCreateUsers) {
-      throw new BadRequestException('Запрещено создавать новых пользователей!');
+      throw new BadRequestException("Запрещено создавать новых пользователей!");
     }
 
     try {
@@ -47,7 +47,7 @@ export class AuthService {
 
   async login(user: UserEntity) {
     return {
-      token: this.jwtService.sign({ id: user.id })
+      token: this.jwtService.sign({ id: user.id }),
     };
   }
 }

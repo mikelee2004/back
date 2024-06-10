@@ -1,9 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
-import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { UserEntity } from "./entities/user.entity";
+import { Repository } from "typeorm";
+import { CreateUserDto } from "./dto/create-user.dto";
 
 @Injectable()
 export class UsersService {
@@ -16,11 +15,9 @@ export class UsersService {
     const existingUser = await this.findByEmail(dto.email);
 
     if (existingUser) {
-      throw new BadRequestException(
-        `Email ${dto.email} уже зарегестрирован!`,
-      );
+      throw new BadRequestException(`Email ${dto.email} уже зарегестрирован!`);
     }
-    return this.repository.save(dto)
+    return this.repository.save(dto);
   }
 
   async findByEmail(email: string) {

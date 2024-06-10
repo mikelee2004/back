@@ -9,16 +9,16 @@ import {
   UseGuards,
   Request,
   Req,
-} from '@nestjs/common';
-import { CartService } from './cart.service';
-import { CreateCartDto } from './dto/create-cart.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { UpdateCartDto } from './dto/update-cart.dto';
-import { DeleteResult } from 'typeorm';
+} from "@nestjs/common";
+import { CartService } from "./cart.service";
+import { CreateCartDto } from "./dto/create-cart.dto";
+import { JwtAuthGuard } from "../auth/guards/jwt.guard";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { UpdateCartDto } from "./dto/update-cart.dto";
+import { DeleteResult } from "typeorm";
 
-@ApiTags('cart')
-@Controller('cart')
+@ApiTags("cart")
+@Controller("cart")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 export class CartController {
@@ -39,8 +39,8 @@ export class CartController {
     return this.cartService.update(dto, req.id);
   }
 
-  @Delete(':id')
-  delete(@Param('id') id: string): Promise<DeleteResult> {
+  @Delete(":id")
+  delete(@Param("id") id: string): Promise<DeleteResult> {
     return this.cartService.remove(+id);
   }
 }

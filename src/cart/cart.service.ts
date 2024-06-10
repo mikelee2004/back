@@ -1,20 +1,19 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { CartEntity } from './entities/cart.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UpdateCartDto } from './dto/update-cart.dto';
-import { ProductEntity } from 'src/product/entities/product.entity';
-import { CreateCartDto } from './dto/create-cart.dto';
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { UserEntity } from "src/user/entities/user.entity";
+import { CartEntity } from "./entities/cart.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { UpdateCartDto } from "./dto/update-cart.dto";
+import { ProductEntity } from "src/product/entities/product.entity";
+import { CreateCartDto } from "./dto/create-cart.dto";
 
 @Injectable()
 export class CartService {
   async getItemsInCart(userId: number): Promise<CartEntity[]> {
-  
     const userCart = await this.cartRepository.findBy({
       user: { id: userId },
     });
-console.log("CartService>", userCart);
+    console.log("CartService>", userCart);
     return userCart;
   }
 
@@ -27,7 +26,7 @@ console.log("CartService>", userCart);
 
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
-  ) { }
+  ) {}
 
   async create(dto: CreateCartDto, userId: number) {
     const cartItem = new CartEntity();
@@ -42,9 +41,9 @@ console.log("CartService>", userCart);
   async update(dto: UpdateCartDto, userId: number) {
     const userCart = await this.cartRepository
       .createQueryBuilder()
-      .select('t.*')
-      .from(CartEntity, 't')
-      .where('t.userId = :userId and t.productId = :productId', {
+      .select("t.*")
+      .from(CartEntity, "t")
+      .where("t.userId = :userId and t.productId = :productId", {
         userId: userId,
         itemId: dto.productId,
       })
@@ -66,11 +65,10 @@ console.log("CartService>", userCart);
     return await this.cartRepository
       .createQueryBuilder()
       .select()
-      .from(CartEntity, 't')
-      .where('t.userId = :userId', { userId: userId })
+      .from(CartEntity, "t")
+      .where("t.userId = :userId", { userId: userId })
       .execute();
   }
-
 
   async remove(id: number) {
     return this.cartRepository.delete(id);
@@ -81,7 +79,7 @@ console.log("CartService>", userCart);
       .createQueryBuilder()
       .delete()
       .from(CartEntity)
-      .where('userId = :userId', { userId: userId })
+      .where("userId = :userId", { userId: userId })
       .execute();
   }
 }

@@ -1,13 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ProductEntity } from './entities/product.entity';
-import { Repository } from 'typeorm';
-import * as fs from 'fs';
-import { CategoryEntity } from 'src/category/entities/category.entity';
-
-
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { CreateProductDto } from "./dto/create-product.dto";
+import { UpdateProductDto } from "./dto/update-product.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { ProductEntity } from "./entities/product.entity";
+import { Repository } from "typeorm";
+import * as fs from "fs";
+import { CategoryEntity } from "src/category/entities/category.entity";
 
 @Injectable()
 export class ProductService {
@@ -56,15 +54,15 @@ export class ProductService {
     if (!toUpdate) {
       throw new BadRequestException(`Записи с id=${id} не найдено`);
     }
-    
+
     if (dto.description) {
       toUpdate.description = dto.description;
     }
-    
+
     if (dto.name) {
       toUpdate.name = dto.name;
     }
-    
+
     if (dto.description) {
       toUpdate.description = dto.description;
     }
@@ -77,13 +75,13 @@ export class ProductService {
       if (toUpdate.image !== image.filename) {
         fs.unlink(`db_images/promo/${toUpdate.image}`, (err) => {
           if (err) {
-            console.error(err)
+            console.error(err);
           }
         });
       }
       toUpdate.image = image.filename;
     }
-    return this.productRepository.save(toUpdate)
+    return this.productRepository.save(toUpdate);
   }
 
   async remove(id: number) {

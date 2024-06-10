@@ -1,16 +1,16 @@
 import {
-    Entity,
-    JoinColumn,
-    OneToOne,
-    Column,
-    PrimaryGeneratedColumn,
-    ManyToOne,
-  } from 'typeorm';
-  import { ProductEntity } from 'src/product/entities/product.entity';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { OrderEntity } from './order.entity';
-  
-@Entity('order_item_entity')
+  Entity,
+  JoinColumn,
+  OneToOne,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+} from "typeorm";
+import { ProductEntity } from "src/product/entities/product.entity";
+import { UserEntity } from "src/user/entities/user.entity";
+import { OrderEntity } from "./order.entity";
+
+@Entity("order_item_entity")
 export class OrderItemEntity {
   @PrimaryGeneratedColumn()
   id: number;

@@ -1,30 +1,28 @@
-import { ApiHideProperty } from '@nestjs/swagger';
-import { ProductEntity } from 'src/product/entities/product.entity';
+import { ApiHideProperty } from "@nestjs/swagger";
+import { ProductEntity } from "src/product/entities/product.entity";
 import {
-    Column, 
-    CreateDateColumn, 
-    Entity, 
-    OneToMany, 
-    PrimaryGeneratedColumn, 
-    UpdateDateColumn
-} from 'typeorm';
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
-@Entity('category')
+@Entity("category")
 export class CategoryEntity {
-    @PrimaryGeneratedColumn({ name: 'id'})
-    id: number;
+  @PrimaryGeneratedColumn({ name: "id" })
+  id: number;
 
-    @Column({ name: 'category_name'})
-    name: string;
+  @Column({ name: "category_name" })
+  name: string;
 
-    @Column()
-    image: string;
+  @Column()
+  image: string;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @UpdateDateColumn()
-    updatedAt: Date;
-    
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
-

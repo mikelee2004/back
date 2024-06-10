@@ -1,23 +1,23 @@
 import {
-    Entity,
-    OneToMany,
-    JoinColumn,
-    Column,
-    PrimaryGeneratedColumn,
-    ManyToOne,
-    CreateDateColumn,
-    OneToOne,
-  } from 'typeorm';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { OrderItemEntity } from './order_item.entity';
-  
-@Entity('order')
+  Entity,
+  OneToMany,
+  JoinColumn,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  CreateDateColumn,
+  OneToOne,
+} from "typeorm";
+import { UserEntity } from "src/user/entities/user.entity";
+import { OrderItemEntity } from "./order_item.entity";
+
+@Entity("order")
 export class OrderEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
-  @JoinColumn({name: 'userId'})
+  @JoinColumn({ name: "userId" })
   user: UserEntity;
 
   @Column()
@@ -27,6 +27,6 @@ export class OrderEntity {
   price: number;
 
   @OneToMany(() => OrderItemEntity, (orderItem) => orderItem.order)
-  @JoinColumn({ name: "products"})
+  @JoinColumn({ name: "products" })
   products: OrderItemEntity[];
 }
