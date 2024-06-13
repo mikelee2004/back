@@ -10,6 +10,9 @@ import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
 import { OrderModule } from "./order/order.module";
 
+import { MiddlewareConsumer, NestModule } from "@nestjs/common";
+import { CorsMiddleware } from "./cors.middleware";
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -30,4 +33,8 @@ import { OrderModule } from "./order/order.module";
     OrderModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule{
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CorsMiddleware).forRoutes('*');
+  }
+}

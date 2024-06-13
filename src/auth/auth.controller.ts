@@ -1,26 +1,31 @@
-import { Controller, Request, Post, UseGuards, Body } from "@nestjs/common";
+import { Controller, Request, Post, UseGuards, Body, UnauthorizedException } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
-
-import { UserEntity } from "../user/entities/user.entity";
 import { CreateUserDto } from "../user/dto/create-user.dto";
 import { AuthService } from "./auth.service";
-import { LocalAuthGuard } from "./guards/local.guard";
-import { AuthGuard } from "@nestjs/passport";
+import { UsersService } from "src/user/user.service";
+import { LocalStrategy } from "./strategies/local.strategy";
 
 @Controller("auth")
 @ApiTags("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UsersService,
+    private readonly localStrategy: LocalStrategy
+  ) {}
 
-  @Post("login")
-  @UseGuards(LocalAuthGuard)
-  @ApiBody({ type: CreateUserDto })
-  async login(@Request() req) {
-    return this.authService.login(req.user as UserEntity);
+  @Post('register')
+  async register(@Body() dto: CreateUserDto): Promise<any> {
+    return await this.localStrategy.register(dto);
   }
 
-  @Post("register")
-  register(@Body() dto: CreateUserDto) {
-    return this.authService.register(dto);
+
+  @Post('login')
+  async login(@Body() dto: CreateUserDto): Promise<any> {
+    const user = await this.localStrategy.login(dto);
+    if (!user) {
+      throw new UnauthorizedException('Неправильные учетные данные');
+    }
+    return user;
   }
 }

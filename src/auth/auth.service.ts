@@ -8,6 +8,7 @@ import { ConfigService } from "@nestjs/config";
 import { UserEntity } from "../user/entities/user.entity";
 import { CreateUserDto } from "../user/dto/create-user.dto";
 import { UsersService } from "../user/user.service";
+import { LoginUser } from "./dto/login.dto";
 
 @Injectable()
 export class AuthService {
@@ -17,10 +18,10 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findByEmail(email);
+  async validateUser(dto: CreateUserDto): Promise<any> {
+    const user = await this.usersService.findByEmail(dto.email);
 
-    if (user && user.password === password) {
+    if (user && user.password === dto.password) {
       const { password, ...result } = user;
       return result;
     }
@@ -45,9 +46,20 @@ export class AuthService {
     }
   }
 
-  async login(user: UserEntity) {
+  async login(dto: CreateUserDto): Promise<any> {
+    const user = await this.usersService.findByEmail(dto.email);
+    if (!user) {
+      throw new BadRequestException(`Такого юзера не существует`);
+    }
+    
+    const validUser = await this.validateUser(user)
+
+    if (!validUser) {
+      throw new BadRequestException(`Неправильно логин или пароль`);
+    }
+    const payload = { email: user.email, role: user.roles };
     return {
-      token: this.jwtService.sign({ id: user.id }),
+      token: this.jwtService.sign(payload),
     };
   }
 }

@@ -9,7 +9,7 @@ import { UserId } from "../decorators/user-id.decorator";
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get("My Profile")
+  @Get("profile")
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   getProfile(@UserId() id: number) {
